@@ -18,7 +18,7 @@ const register = asyncHandler(async ({ body }: Request, res: Response, next: Nex
 
   const user = await findOneUserByEmail(email)
 
-  if (user != null) throw boom.forbidden('Already registered')
+  if (user != null) throw boom.forbidden('User already registered')
 
   const passwordHash = await encrypt(password)
 

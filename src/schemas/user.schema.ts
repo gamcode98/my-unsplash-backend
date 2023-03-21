@@ -2,7 +2,7 @@ import Joi from 'joi'
 
 const id = Joi.string()
 const email = Joi.string().email()
-const password = Joi.string()
+const registerPassword = Joi.string()
   .min(8)
   .max(16)
   .pattern(
@@ -11,6 +11,7 @@ const password = Joi.string()
   .message(
     '"password" must be a string with minimum eight characters, at least one upper case English letter, one lower case English letter, one number and one special character'
   )
+const loginPassword = Joi.string()
 const token = Joi.string()
 const oldPassword = Joi.string()
   .min(8)
@@ -33,12 +34,12 @@ const newPassword = Joi.string()
 
 const createUserSchema = Joi.object({
   email: email.required(),
-  password: password.required()
+  password: registerPassword.required()
 })
 
 const loginUserSchema = Joi.object({
   email: email.required(),
-  password: password.required()
+  password: loginPassword.required()
 })
 
 const updateUserSchema = Joi.object({
