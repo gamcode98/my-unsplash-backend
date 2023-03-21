@@ -1,5 +1,7 @@
-import { Schema, model } from 'mongoose'
+import { Schema, model, PaginateModel } from 'mongoose'
 import { Image } from '../interfaces/image.interface'
+import mongoosePaginate from 'mongoose-paginate-v2'
+import { ImageDocument } from '../interfaces/image-paginate.interface'
 
 const ImageSchema = new Schema<Image>(
   {
@@ -13,6 +15,8 @@ const ImageSchema = new Schema<Image>(
   }
 )
 
-const ImageModel = model('images', ImageSchema)
+ImageSchema.plugin(mongoosePaginate)
+
+const ImageModel = model<ImageDocument, PaginateModel<ImageDocument>>('images', ImageSchema)
 
 export default ImageModel

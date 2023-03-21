@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { saveImageCtrl } from '../controllers/image.controller'
+import { getImagesCtrl, saveImageCtrl } from '../controllers/image.controller'
 import checkJwt from '../middlewares/session.handler'
 import validatorHandler from '../middlewares/validator.handler'
 import { saveImageSchema } from '../schemas/image.schema'
@@ -11,6 +11,12 @@ router.post(
   checkJwt,
   validatorHandler(saveImageSchema, 'body'),
   saveImageCtrl
+)
+
+router.get(
+  '/',
+  checkJwt,
+  getImagesCtrl
 )
 
 export default router
