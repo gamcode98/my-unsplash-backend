@@ -12,6 +12,7 @@ import { config } from '../config'
 import { sendEmail } from '../utils/email.handler'
 import { UserDto } from '../dto/auth.dto'
 import { asyncHandler } from '../middlewares/async.handler'
+import { RequestExt } from '../interfaces/request-ext'
 
 const register = asyncHandler(async ({ body }: Request, res: Response, next: NextFunction): Promise<void> => {
   const { email, password } = body
@@ -113,4 +114,22 @@ const changePassword = asyncHandler(async ({ body }: Request, res: Response, nex
   })
 })
 
-export { register, login, recoveryPassword, changePassword }
+const validate = asyncHandler(async ({ user }: RequestExt, res: Response, next: NextFunction): Promise<void> => {
+  const userFound = await findOneUserById(user?.id)
+
+  if (!userFound) throw boom.unauthorized()
+
+  res.status(200).send({
+    statusCode: res.statusCode,
+    error: false,
+    message: 'Session validated',
+    response: {
+      user: {
+        id: userFound._id,
+        email: userFound.email
+      }
+    }
+  })
+})
+
+export { register, login, recoveryPassword, changePassword, validate }
