@@ -1,11 +1,12 @@
 import { PaginateResult, Types } from 'mongoose'
+import { DeleteResult } from '../interfaces/delete-result'
 import { ImageDocument } from '../interfaces/image-paginate.interface'
 import { Image } from '../interfaces/image.interface'
 import { Options } from '../interfaces/options.interface'
 import ImageModel from '../models/image.model'
 
 const saveImage = async (image: Image): Promise<Image> => {
-  const result = await ImageModel.create(image)
+  const result = await ImageModel.create({ ...image })
   return result
 }
 
@@ -15,4 +16,9 @@ Promise<PaginateResult<ImageDocument & { _id: Types.ObjectId }>> => {
   return results
 }
 
-export { saveImage, getImages }
+const deleteImage = async (id: string): Promise<DeleteResult> => {
+  const result = await ImageModel.deleteOne({ _id: id })
+  return result
+}
+
+export { saveImage, getImages, deleteImage }

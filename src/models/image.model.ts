@@ -6,7 +6,7 @@ import { ImageDocument } from '../interfaces/image-paginate.interface'
 const ImageSchema = new Schema<Image>(
   {
     label: { type: String },
-    photoUrl: { type: String },
+    imageUrl: { type: String },
     userId: { type: String }
   },
   {

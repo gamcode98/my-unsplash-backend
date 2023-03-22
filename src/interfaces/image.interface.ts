@@ -1,5 +1,5 @@
 export interface Image {
   label: string
-  photoUrl: string
+  imageUrl: string
   userId: string
 }

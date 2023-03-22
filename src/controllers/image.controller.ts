@@ -1,8 +1,9 @@
 import { NextFunction, Response } from 'express'
 import { asyncHandler } from '../middlewares/async.handler'
 import { RequestExt } from '../interfaces/request-ext'
-import { getImages, saveImage } from '../services/image.service'
+import { deleteImage, getImages, saveImage } from '../services/image.service'
 import { config } from '../config'
+import boom from '@hapi/boom'
 
 const saveImageCtrl = asyncHandler(async ({ user, body }: RequestExt, res: Response, next: NextFunction): Promise<void> => {
   const response = await saveImage({ ...body, userId: user?.id })
@@ -34,10 +35,23 @@ const getImagesCtrl = asyncHandler(async ({ user, query }: RequestExt, res: Resp
     message: 'Results',
     response: {
       content: docs,
-      prevPage: `${prevPage === null ? null : config.backendUrl + '/api/v1/results?limit=' + options.limit + '&offset=' + prevOffset}`,
-      nextPage: `${nextPage === null ? null : config.backendUrl + '/api/v1/results?limit=' + options.limit + '&offset=' + nextOffset}`
+      prevPage: `${prevPage === null ? null : config.backendUrl + '/api/v1/images?limit=' + options.limit + '&offset=' + prevOffset}`,
+      nextPage: `${nextPage === null ? null : config.backendUrl + '/api/v1/images?limit=' + options.limit + '&offset=' + nextOffset}`
     }
   })
 })
 
-export { saveImageCtrl, getImagesCtrl }
+const deleteImageCtrl = asyncHandler(async ({ user, params }: RequestExt, res: Response, next: NextFunction): Promise<void> => {
+  const { _id } = params
+  const response = await deleteImage(_id)
+
+  if (response.deletedCount === 0) throw boom.notFound()
+
+  res.status(200).send({
+    statusCode: res.statusCode,
+    error: false,
+    message: 'Image deleted succesfully'
+  })
+})
+
+export { saveImageCtrl, getImagesCtrl, deleteImageCtrl }
