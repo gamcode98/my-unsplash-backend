@@ -20,9 +20,9 @@ router.get(
 )
 
 router.delete(
-  '/:id/:password',
+  '/',
   checkJwt,
-  validatorHandler(deleteOneImageSchema, 'params'),
+  validatorHandler(deleteOneImageSchema, 'body'),
   deleteImageCtrl
 )
 
