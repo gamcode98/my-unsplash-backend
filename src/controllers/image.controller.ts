@@ -43,8 +43,8 @@ const getImagesCtrl = asyncHandler(async ({ user, query }: RequestExt, res: Resp
   })
 })
 
-const deleteImageCtrl = asyncHandler(async ({ user, body }: RequestExt, res: Response, next: NextFunction): Promise<void> => {
-  const { id, password } = body
+const deleteImageCtrl = asyncHandler(async ({ user, params }: RequestExt, res: Response, next: NextFunction): Promise<void> => {
+  const { id, password } = params
 
   const userFound = await findOneUserById(user?.id)
 
