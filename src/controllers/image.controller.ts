@@ -4,6 +4,8 @@ import { RequestExt } from '../interfaces/request-ext'
 import { deleteImage, getImages, saveImage } from '../services/image.service'
 import { config } from '../config'
 import boom from '@hapi/boom'
+import { verify } from '../utils/bcrypt.handler'
+import { findOneUserById } from '../services/user.service'
 
 const saveImageCtrl = asyncHandler(async ({ user, body }: RequestExt, res: Response, next: NextFunction): Promise<void> => {
   const response = await saveImage({ ...body, userId: user?.id })
@@ -41,9 +43,18 @@ const getImagesCtrl = asyncHandler(async ({ user, query }: RequestExt, res: Resp
   })
 })
 
-const deleteImageCtrl = asyncHandler(async ({ user, params }: RequestExt, res: Response, next: NextFunction): Promise<void> => {
-  const { _id } = params
-  const response = await deleteImage(_id)
+const deleteImageCtrl = asyncHandler(async ({ user, body }: RequestExt, res: Response, next: NextFunction): Promise<void> => {
+  const { id, password } = body
+
+  const userFound = await findOneUserById(user?.id)
+
+  if (userFound == null) throw boom.notFound('User not found')
+
+  const isCorrect = await verify(password, userFound.password)
+
+  if (!isCorrect) throw boom.unauthorized()
+
+  const response = await deleteImage(id)
 
   if (response.deletedCount === 0) throw boom.notFound()
 

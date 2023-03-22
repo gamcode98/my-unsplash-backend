@@ -1,11 +1,12 @@
 /* eslint-disable no-useless-escape */
 import Joi from 'joi'
 
-const _id = Joi.string().hex().length(24)
+const id = Joi.string().hex().length(24)
 const label = Joi.string()
 const imageUrl = Joi.string()
   .pattern(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()!@:%_\.~#?&\/\/=]*)/)
   .message('Must be a valid url')
+const password = Joi.string()
 
 const saveImageSchema = Joi.object({
   label: label.required(),
@@ -13,7 +14,9 @@ const saveImageSchema = Joi.object({
 })
 
 const deleteOneImageSchema = Joi.object({
-  _id: _id.required()
+  id: id.required(),
+  password: password.required()
+
 })
 
 export { saveImageSchema, deleteOneImageSchema }
