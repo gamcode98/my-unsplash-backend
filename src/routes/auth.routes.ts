@@ -44,7 +44,7 @@ router.patch(
   updatePassword
 )
 
-router.patch(
+router.delete(
   '/delete-account',
   checkJwt,
   validatorHandler(deleteAccountSchema, 'body'),
