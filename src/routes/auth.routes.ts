@@ -37,6 +37,7 @@ router.post(
 
 router.patch(
   '/update-password',
+  checkJwt,
   validatorHandler(changePasswordInSessionUserSchema, 'body'),
   updatePassword
 )
