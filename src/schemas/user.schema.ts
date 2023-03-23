@@ -12,6 +12,7 @@ const registerPassword = Joi.string()
     '"password" must be a string with minimum eight characters, at least one upper case English letter, one lower case English letter, one number and one special character'
   )
 const loginPassword = Joi.string()
+const password = Joi.string()
 const token = Joi.string()
 const oldPassword = Joi.string()
 const newPassword = Joi.string()
@@ -56,6 +57,10 @@ const changePasswordInSessionUserSchema = Joi.object({
   newPassword: newPassword.required()
 })
 
+const deleteAccountSchema = Joi.object({
+  password: password.required()
+})
+
 export {
   createUserSchema,
   loginUserSchema,
@@ -63,5 +68,6 @@ export {
   getUserSchema,
   recoveryUserSchema,
   changePasswordUserSchema,
-  changePasswordInSessionUserSchema
+  changePasswordInSessionUserSchema,
+  deleteAccountSchema
 }

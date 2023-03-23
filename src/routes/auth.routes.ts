@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import {
   changePassword,
+  deleteAccount,
   login,
   recoveryPassword,
   register,
@@ -13,6 +14,7 @@ import {
   changePasswordInSessionUserSchema,
   changePasswordUserSchema,
   createUserSchema,
+  deleteAccountSchema,
   loginUserSchema,
   recoveryUserSchema
 } from '../schemas/user.schema'
@@ -40,6 +42,13 @@ router.patch(
   checkJwt,
   validatorHandler(changePasswordInSessionUserSchema, 'body'),
   updatePassword
+)
+
+router.patch(
+  '/delete-account',
+  checkJwt,
+  validatorHandler(deleteAccountSchema, 'body'),
+  deleteAccount
 )
 
 router.get(

@@ -21,4 +21,9 @@ const deleteImage = async (id: string): Promise<DeleteResult> => {
   return result
 }
 
-export { saveImage, getImages, deleteImage }
+const deleteAllImagesFromOneUser = async (userId: string): Promise<DeleteResult> => {
+  const result = await ImageModel.deleteMany({ userId })
+  return result
+}
+
+export { saveImage, getImages, deleteImage, deleteAllImagesFromOneUser }

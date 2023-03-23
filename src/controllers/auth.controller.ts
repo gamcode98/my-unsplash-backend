@@ -3,7 +3,8 @@ import {
   registerNewUser,
   findOneUserByEmail,
   updateOneUser,
-  findOneUserById
+  findOneUserById,
+  deleteOneUser
 } from '../services/user.service'
 import { encrypt, verify } from '../utils/bcrypt.handler'
 import { generateToken, verifyToken } from '../utils/jwt.handler'
@@ -13,6 +14,7 @@ import { sendEmail } from '../utils/email.handler'
 import { UserDto } from '../dto/auth.dto'
 import { asyncHandler } from '../middlewares/async.handler'
 import { RequestExt } from '../interfaces/request-ext'
+import { deleteAllImagesFromOneUser } from '../services/image.service'
 
 const register = asyncHandler(async ({ body }: Request, res: Response, next: NextFunction): Promise<void> => {
   const { email, password } = body
@@ -137,6 +139,27 @@ const updatePassword = asyncHandler(async ({ user, body }: RequestExt, res: Resp
   })
 })
 
+const deleteAccount = asyncHandler(async ({ user, body }: RequestExt, res: Response, next: NextFunction): Promise<void> => {
+  const { password } = body
+
+  const userFound = await findOneUserById(user?.id)
+
+  if (!userFound) throw boom.unauthorized()
+
+  const isCorrect = await verify(password, userFound.password)
+
+  if (!isCorrect) throw boom.unauthorized()
+
+  await deleteAllImagesFromOneUser(user?.id)
+
+  await deleteOneUser(user?.id)
+
+  res.status(200).send({
+    statusCode: res.statusCode,
+    message: 'User deleted successfully'
+  })
+})
+
 const validate = asyncHandler(async ({ user }: RequestExt, res: Response, next: NextFunction): Promise<void> => {
   const userFound = await findOneUserById(user?.id)
 
@@ -155,4 +178,12 @@ const validate = asyncHandler(async ({ user }: RequestExt, res: Response, next: 
   })
 })
 
-export { register, login, recoveryPassword, changePassword, updatePassword, validate }
+export {
+  register,
+  login,
+  recoveryPassword,
+  changePassword,
+  updatePassword,
+  deleteAccount,
+  validate
+}
