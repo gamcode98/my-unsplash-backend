@@ -114,6 +114,29 @@ const changePassword = asyncHandler(async ({ body }: Request, res: Response, nex
   })
 })
 
+const updatePassword = asyncHandler(async ({ user, body }: RequestExt, res: Response, next: NextFunction): Promise<void> => {
+  const { oldPassword, newPassword } = body
+
+  const userFound = await findOneUserById(user?.id)
+
+  if (!userFound) throw boom.unauthorized()
+
+  const isCorrect = await verify(oldPassword, userFound.password)
+
+  if (!isCorrect) throw boom.unauthorized()
+
+  const passwordHash = await encrypt(newPassword)
+
+  await updateOneUser(user?.id, {
+    password: passwordHash
+  })
+
+  res.status(200).send({
+    statusCode: res.statusCode,
+    message: 'Password changed successfully'
+  })
+})
+
 const validate = asyncHandler(async ({ user }: RequestExt, res: Response, next: NextFunction): Promise<void> => {
   const userFound = await findOneUserById(user?.id)
 
@@ -132,4 +155,4 @@ const validate = asyncHandler(async ({ user }: RequestExt, res: Response, next: 
   })
 })
 
-export { register, login, recoveryPassword, changePassword, validate }
+export { register, login, recoveryPassword, changePassword, updatePassword, validate }

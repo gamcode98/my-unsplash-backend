@@ -4,11 +4,13 @@ import {
   login,
   recoveryPassword,
   register,
+  updatePassword,
   validate
 } from '../controllers/auth.controller'
 import checkJwt from '../middlewares/session.handler'
 import validatorHandler from '../middlewares/validator.handler'
 import {
+  changePasswordInSessionUserSchema,
   changePasswordUserSchema,
   createUserSchema,
   loginUserSchema,
@@ -31,6 +33,12 @@ router.post(
   '/change-password',
   validatorHandler(changePasswordUserSchema, 'body'),
   changePassword
+)
+
+router.patch(
+  '/update-password',
+  validatorHandler(changePasswordInSessionUserSchema, 'body'),
+  updatePassword
 )
 
 router.get(

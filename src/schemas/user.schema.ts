@@ -14,14 +14,6 @@ const registerPassword = Joi.string()
 const loginPassword = Joi.string()
 const token = Joi.string()
 const oldPassword = Joi.string()
-  .min(8)
-  .max(16)
-  .pattern(
-    /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$/
-  )
-  .message(
-    '"password" must be a string with minimum eight characters, at least one upper case English letter, one lower case English letter, one number and one special character'
-  )
 const newPassword = Joi.string()
   .min(8)
   .max(16)
